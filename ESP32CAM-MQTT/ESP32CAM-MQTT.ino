@@ -18,10 +18,10 @@ const char* mqttServer = "192.168.137.1";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
-const char* mqttClientName = "ESP32CAM";
+const char* mqttClientName = "ESP32CAM3";
 
 #define FLASH_GPIO 4
-#define ESP32CAM_PUBLISH_TOPIC   "esp32cam1"
+#define ESP32CAM_PUBLISH_TOPIC   "esp32cam3"
 const int bufferSize = 1024 * 23;
 
 WiFiClient espClient;

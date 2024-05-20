@@ -36,25 +36,23 @@ client.on('connect', function(){
 
 client.on('message', async function (topic, message) {
   if (topic === "esp32cam1") {
-    const webcam0_data = message.toString();
-    io.emit("webcam1_io", webcam0_data);
-    io.emit("webcam3_io", webcam0_data);
-    io.emit("webcam4_io", webcam0_data);
+    const webcam1_data = message.toString();
+    io.emit("webcam1_io", webcam1_data);
   }
 
   else if (topic === "esp32cam2") {
-    const webcam1_data = message.toString();
-    io.emit("webcam2_io", webcam1_data);
+    const webcam2_data = message.toString();
+    io.emit("webcam2_io", webcam2_data);
   }
 
   else if (topic === "esp32cam3") {
-    const webcam2_data = message.toString();
-    io.emit("webcam3_io", webcam2_data);
+    const webcam3_data = message.toString();
+    io.emit("webcam3_io", webcam3_data);
   }
 
   else if (topic === "esp32cam4") {
-    const webcam3_data = message.toString();
-    io.emit("webcam4_io", webcam3_data);
+    const webcam4_data = message.toString();
+    io.emit("webcam4_io", webcam4_data);
   }
 });
 
