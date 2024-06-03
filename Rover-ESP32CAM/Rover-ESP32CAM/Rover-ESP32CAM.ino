@@ -23,6 +23,7 @@ int in3 = 21;
 int in4 = 22;
 
 int speed = 0;
+int direction = 1;
 
 WiFiClient espClient;
 PubSubClient client(espClient);
@@ -80,7 +81,12 @@ void callback(char* topic, byte* message, unsigned int length) {
   if (String(topic) == "control") {
     Serial.print("Da nhan thong tin dieu khien:");
     if (messageTemp == "tangtoc") {
-      tangtoc();
+      if (direction == 1) {
+        tangtoc();
+      }
+      else if (direction == 0) {
+        giamtoc();
+      }
       Serial.print("Da tang toc.");
     } else if (messageTemp == "sangtrai") {
       sangtrai();
@@ -89,11 +95,26 @@ void callback(char* topic, byte* message, unsigned int length) {
       sangphai();
       Serial.print("Da sang phai.");
     } else if (messageTemp == "giamtoc") {
-      giamtoc();
+      if (direction == 1) {
+        giamtoc();
+      }
+      else if (direction == 0) {
+        tangtoc();
+      }
       Serial.print("Da giam toc.");
     } else if (messageTemp == "phanh") {
       phanh();
       Serial.print("Da phanh.");
+    }
+  }
+  else if (String(topic) == "directioncontrol") {
+    Serial.print("Da nhan thong tin chuyen huong:");
+    if (messageTemp == "tien") {
+      direction = 1;
+      Serial.print("Huong di chuyen lien len phia truoc.");
+    } else if (messageTemp == "lui") {
+      direction = 0;
+      Serial.print("Huong di chuyen lui lai phia sau.");
     }
   }
 }

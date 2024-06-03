@@ -79,5 +79,31 @@ io.on("connection", function (socket) {
   });
 });
 
+io.on("connection", function (socket) {
+  socket.on("direction-io", async function (switchValue) {
+    const mqttMessage = switchValue;
+    if (mqttMessage == "tien") {
+      console.log("Trang thai di tien.");
+    }
+    else if (mqttMessage == "lui") {
+      console.log("Trang thai di lui.");
+    }
+    client.publish("directioncontrol", mqttMessage);
+  });
+});
+
+io.on("connection", function (socket) {
+  socket.on("flash-io", async function (switchValue) {
+    const mqttMessage = switchValue;
+    if (mqttMessage == "bat") {
+      console.log("Da bat den flash.");
+    }
+    else if (mqttMessage == "tat") {
+      console.log("Da tat den flash.");
+    }
+    client.publish("flashcontrol", mqttMessage);
+  });
+});
+
 console.log("Website co dia chi:");
 console.log(`http://localhost:${port}`);
