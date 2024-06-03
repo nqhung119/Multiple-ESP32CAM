@@ -63,7 +63,10 @@
           <div class="row" style="flex-grow: 1">
             <div class="col-3 d-flex justify-content-start"></div>
             <div class="col-6 d-flex justify-content-center align-items-center">
-              <p class="h5 text-center" style="color: #ffffff">
+              <p
+                class="h5 text-center"
+                style="color: #ffffff; margin-top: 3px; margin-bottom: 3px"
+              >
                 HỆ THỐNG ĐIỀU KHIỂN XE TỰ HÀNH
               </p>
             </div>
@@ -98,7 +101,7 @@
               </div>
             </div>
 
-            <div class="row rounded py-5"></div>
+            <div class="row rounded py-2"></div>
 
             <div class="row rounded pt-5 pb-1">
               <div class="col">
@@ -109,6 +112,7 @@
                     background-color: #d30000;
                     color: #fff;
                     font-weight: bold;
+                    border: 0;
                   "
                   >Điều khiển</a
                 >
@@ -169,7 +173,43 @@
               </div>
             </div>
 
-            <div class="row rounded" style="padding-top: 3.75rem">
+            <div class="row">
+              <div class="col-5">
+                <p class="text-center">Đi lùi</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="direction-control"
+                  />
+                </div>
+              </div>
+              <div class="col-5">
+                <p class="text-center">Đi tiến</p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-5">
+                <p class="text-center">Tắt đèn</p>
+              </div>
+              <div class="col-2 d-flex justify-content-center">
+                <div class="form-check form-switch">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="flash-control"
+                  />
+                </div>
+              </div>
+              <div class="col-5">
+                <p class="text-center">Bật đèn</p>
+              </div>
+            </div>
+
+            <div class="row rounded" style="padding-top: 3.75rem" id="back">
               <div class="col">
                 <a
                   href="/"

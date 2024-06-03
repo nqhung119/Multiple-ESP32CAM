@@ -116,6 +116,17 @@ document.getElementById('esp4').addEventListener('click', function() {
     document.getElementById('camera1-2').style.display = 'none';
 });
 
+document.querySelectorAll('[id^="esp"]').forEach(item => {
+    item.addEventListener('click', function() {
+        document.getElementById('back').style.display = 'block';
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('back').style.display = 'none';
+});
+
+
 $("#tangtoc").click(function () {
     socket.emit("tangtoc-clicked");
 });

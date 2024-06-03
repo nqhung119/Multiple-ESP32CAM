@@ -4,14 +4,6 @@
 #include <Arduino_JSON.h>
 #include <SimpleTimer.h>
 
-// Motor A
-int motor1Pin1 = 19; 
-int motor1Pin2 = 21; 
-int enable1Pin = 18; 
-
-// Setting minimum duty cycle
-int dutyCycle = 0;
-
 const char* ssid = "QUANGHUNG";
 const char* password = "11092002";
 const char* mqttServer = "192.168.137.1";
@@ -21,10 +13,25 @@ const char* mqttPassword = "";
 const char* mqttClientName = "ESP32Control";
 const char* mqttTopic = "control";
 
+// Motor A
+int enA = 16;
+int in1 = 17;
+int in2 = 18;
+// Motor B
+int enB = 19;
+int in3 = 21;
+int in4 = 22;
+
+int speed = 0;
+
 WiFiClient espClient;
 PubSubClient client(espClient);
 JSONVar data;
 SimpleTimer timer;
+
+bool turning = false;
+unsigned long lastTurnTime = 0;
+int turnAngle = 0;
 
 void connectInternet() {
   WiFi.begin(ssid, password);
@@ -78,16 +85,13 @@ void callback(char* topic, byte* message, unsigned int length) {
     } else if (messageTemp == "sangtrai") {
       sangtrai();
       Serial.print("Da sang trai.");
-    }
-    else if (messageTemp == "sangphai") {
+    } else if (messageTemp == "sangphai") {
       sangphai();
       Serial.print("Da sang phai.");
-    }
-     else if (messageTemp == "giamtoc") {
+    } else if (messageTemp == "giamtoc") {
       giamtoc();
       Serial.print("Da giam toc.");
-    }
-    else if (messageTemp == "phanh") {
+    } else if (messageTemp == "phanh") {
       phanh();
       Serial.print("Da phanh.");
     }
@@ -95,23 +99,90 @@ void callback(char* topic, byte* message, unsigned int length) {
 }
 
 void tangtoc() {
+  if (speed < 255) {
+    speed = speed + 50;
+  } else {
+    speed = 0;
+  }
 
-}
+  analogWrite(enA, speed);
+  analogWrite(enB, speed);
 
-void sangtrai() {
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
 
-}
-
-void sangphai() {
-  
+  delay(100);
 }
 
 void giamtoc() {
+  if (speed > 0) {
+    speed = speed - 50;
+  } else {
+    speed = 0;
+  }
 
+  analogWrite(enA, speed);
+  analogWrite(enB, speed);
+
+  digitalWrite(in1, HIGH);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, HIGH);
+  digitalWrite(in4, LOW);
+
+  delay(100);
+}
+
+void sangphai() {
+  if (!turning) {
+    phanh();
+    turning = true;
+    lastTurnTime = millis();
+    turnAngle = 0;
+  } else {
+    if (millis() - lastTurnTime < 1000) {
+      phanh();
+    } else if (turnAngle < 30) {
+      digitalWrite(in1, HIGH);
+      digitalWrite(in2, LOW);
+      digitalWrite(in3, LOW);
+      digitalWrite(in4, HIGH);
+      turnAngle++;
+    } else {
+      phanh();
+      turning = false;
+    }
+  }
+}
+
+void sangtrai() {
+  if (!turning) {
+    phanh();
+    turning = true;
+    lastTurnTime = millis();
+    turnAngle = 0;
+  } else {
+    if (millis() - lastTurnTime < 1000) {
+      phanh();
+    } else if (turnAngle < 30) {
+      digitalWrite(in1, LOW);
+      digitalWrite(in2, HIGH);
+      digitalWrite(in3, HIGH);
+      digitalWrite(in4, LOW);
+      turnAngle++;
+    } else {
+      phanh();
+      turning = false;
+    }
+  }
 }
 
 void phanh() {
-
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
 }
 
 void setup() {
@@ -119,60 +190,25 @@ void setup() {
   client.setServer(mqttServer, mqttPort);
   client.setCallback(callback);
 
-  // sets the pins as outputs:
-  pinMode(motor1Pin1, OUTPUT);
-  pinMode(motor1Pin2, OUTPUT);
-  pinMode(enable1Pin, OUTPUT);
-
   Serial.begin(115200);
 
-  // testing
-  Serial.print("Testing DC Motor...");
+  pinMode(enA, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, LOW);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, LOW);
 }
 
 void loop() {
-   if (!client.connected()) {
+  if (!client.connected()) {
     reconnect();
   }
   client.loop();
   timer.run();
-
-  //Apply power to spin at maximum speed
-  digitalWrite(enable1Pin, HIGH);
-
-  // Move the DC motor forward at maximum speed
-  Serial.println("Moving Forward");
-  digitalWrite(motor1Pin1, LOW);
-  digitalWrite(motor1Pin2, HIGH); 
-  delay(2000);
-
-  // Stop the DC motor
-  Serial.println("Motor stopped");
-  digitalWrite(motor1Pin1, LOW);
-  digitalWrite(motor1Pin2, LOW);
-  delay(1000);
-
-  // Move DC motor backwards at maximum speed
-  Serial.println("Moving Backwards");
-  digitalWrite(motor1Pin1, HIGH);
-  digitalWrite(motor1Pin2, LOW); 
-  delay(2000);
-
-  // Stop the DC motor
-  Serial.println("Motor stopped");
-  digitalWrite(motor1Pin1, LOW);
-  digitalWrite(motor1Pin2, LOW);
-  delay(1000);
-
-  // Move DC motor forward with increasing speed
-  digitalWrite(motor1Pin1, HIGH);
-  digitalWrite(motor1Pin2, LOW);
-  while (dutyCycle <= 255){
-    analogWrite(enable1Pin, dutyCycle);   
-    Serial.print("Forward with duty cycle: ");
-    Serial.println(dutyCycle);
-    dutyCycle = dutyCycle + 5;
-    delay(500);
-  }
-  dutyCycle = 60;
 }

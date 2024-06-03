@@ -18,10 +18,11 @@ const char* mqttServer = "192.168.137.1";
 const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
-const char* mqttClientName = "ESP32CAM2";
+const char* mqttClientName = "ESP32CAM2"; //
+const char* mqttTopic = "flashcontrol"; //
 
 #define FLASH_GPIO 4
-#define ESP32CAM_PUBLISH_TOPIC   "esp32cam2"
+#define ESP32CAM_PUBLISH_TOPIC   "esp32cam2" //
 const int bufferSize = 1024 * 23;
 
 WiFiClient espClient;
@@ -54,8 +55,33 @@ void reconnect() {
 
     if (client.connect(mqttClientName, mqttUser, mqttPassword)) {
       Serial.println("Connected.");
+      client.subscribe(mqttTopic);
     } else {
       Serial.println("Try again.");
+    }
+  }
+}
+
+void callback(char* topic, byte* message, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
+  }
+  Serial.println();
+
+  if (String(topic) == "flashcontrol") { //
+    Serial.print("Da nhan thong tin dieu khien:");
+    if (messageTemp == "bat") {
+      digitalWrite(FLASH_GPIO, HIGH);
+      Serial.print("Da bat den flash.");
+    } else if (messageTemp == "tat") {
+      digitalWrite(FLASH_GPIO, LOW);
+      Serial.print("Da tat den flash.");
     }
   }
 }
