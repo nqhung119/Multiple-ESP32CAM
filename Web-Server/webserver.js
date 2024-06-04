@@ -88,7 +88,7 @@ io.on("connection", function (socket) {
     else if (mqttMessage == "lui") {
       console.log("Trang thai di lui.");
     }
-    client.publish("directioncontrol", mqttMessage);
+    client.publish("control", mqttMessage);
   });
 });
 

@@ -19,7 +19,7 @@ const int mqttPort = 1883;
 const char* mqttUser = "";
 const char* mqttPassword = "";
 const char* mqttClientName = "ESP32CAM2"; //
-const char* mqttTopic = "flashcontrol"; //
+const char* mqttTopic = "flashcontrol";
 
 #define FLASH_GPIO 4
 #define ESP32CAM_PUBLISH_TOPIC   "esp32cam2" //
@@ -173,12 +173,12 @@ void setup() {
     Serial.println("PSRAM found. Setting up camera with PSRAM");
     //config.frame_size = FRAMESIZE_HVGA;
     config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 20;
+    config.jpeg_quality = 25;
     config.fb_count = 1;
   } else {
     //config.frame_size = FRAMESIZE_HVGA;
     config.frame_size = FRAMESIZE_SVGA;
-    config.jpeg_quality = 20;
+    config.jpeg_quality = 25;
     config.fb_count = 2;
   }
   
@@ -194,6 +194,7 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
 
   pinMode(FLASH_GPIO, OUTPUT);
   digitalWrite(FLASH_GPIO, LOW);

@@ -83,36 +83,40 @@ void callback(char* topic, byte* message, unsigned int length) {
     if (messageTemp == "tangtoc") {
       if (direction == 1) {
         tangtoc();
-      }
-      else if (direction == 0) {
-        giamtoc();
+      } else if (direction == 0) {
+        tangtoclui();
       }
       Serial.print("Da tang toc.");
     } else if (messageTemp == "sangtrai") {
-      sangtrai();
+      if (direction == 1) {
+        sangtrai();
+      } else if (direction == 0) {
+        sangphai();
+      }
       Serial.print("Da sang trai.");
     } else if (messageTemp == "sangphai") {
-      sangphai();
+      if (direction == 1) {
+        sangphai();
+      } else if (direction == 0) {
+        sangtrai();
+      }
       Serial.print("Da sang phai.");
     } else if (messageTemp == "giamtoc") {
       if (direction == 1) {
         giamtoc();
-      }
-      else if (direction == 0) {
-        tangtoc();
+      } else if (direction == 0) {
+        giamtoclui();
       }
       Serial.print("Da giam toc.");
     } else if (messageTemp == "phanh") {
       phanh();
       Serial.print("Da phanh.");
     }
-  }
-  else if (String(topic) == "directioncontrol") {
-    Serial.print("Da nhan thong tin chuyen huong:");
-    if (messageTemp == "tien") {
+    else if (messageTemp == "tien") {
       direction = 1;
       Serial.print("Huong di chuyen lien len phia truoc.");
-    } else if (messageTemp == "lui") {
+    }
+    else if (messageTemp == "lui") {
       direction = 0;
       Serial.print("Huong di chuyen lui lai phia sau.");
     }
@@ -137,6 +141,24 @@ void tangtoc() {
   delay(100);
 }
 
+void tangtoclui() {
+  if (speed < 255) {
+    speed = speed + 50;
+  } else {
+    speed = 0;
+  }
+
+  analogWrite(enA, speed);
+  analogWrite(enB, speed);
+
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
+
+  delay(100);
+}
+
 void giamtoc() {
   if (speed > 0) {
     speed = speed - 50;
@@ -151,6 +173,24 @@ void giamtoc() {
   digitalWrite(in2, LOW);
   digitalWrite(in3, HIGH);
   digitalWrite(in4, LOW);
+
+  delay(100);
+}
+
+void giamtoclui() {
+  if (speed > 0) {
+    speed = speed - 50;
+  } else {
+    speed = 0;
+  }
+
+  analogWrite(enA, speed);
+  analogWrite(enB, speed);
+
+  digitalWrite(in1, LOW);
+  digitalWrite(in2, HIGH);
+  digitalWrite(in3, LOW);
+  digitalWrite(in4, HIGH);
 
   delay(100);
 }
@@ -204,6 +244,7 @@ void phanh() {
   digitalWrite(in2, LOW);
   digitalWrite(in3, LOW);
   digitalWrite(in4, LOW);
+  speed = 0;
 }
 
 void setup() {

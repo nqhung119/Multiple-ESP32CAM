@@ -125,10 +125,14 @@ document.getElementById('esp4').addEventListener('click', function() {
 
 function restoreInitialImageState() {
     Object.keys(initialImageStates).forEach(id => {
-      const img = document.getElementById(id);
-      img.width = initialImageStates[id].width;
-      img.height = initialImageStates[id].height;
-      img.src = initialImageStates[id].src;
+        const img = document.getElementById(id);
+        this.width = 488.4;
+        this.height = 200;
+        desiredWidth = 488.4;
+        desiredHeight = 200;
+        img.width = desiredWidth;
+        img.height = desiredHeight;
+        img.src = initialImageStates[id].src;
     });
 
     document.querySelectorAll('[id^="camera-"]').forEach(item => {
@@ -142,11 +146,6 @@ function restoreInitialImageState() {
     document.getElementById('camera3-4').style.display = 'flex';
     document.getElementById('camera3-4').style.flexDirection = 'row';
   }
-
-document.getElementById('back').addEventListener('click', function() {
-    restoreInitialImageState();
-});
-
 
 document.getElementById('back').addEventListener('click', function() {
     restoreInitialImageState();
